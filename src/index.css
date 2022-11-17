@@ -11,3 +11,77 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Image container */
+.img-container {
+  position: relative;
+  /* width: 100%; */
+  /* max-width: 700px; */
+}
+
+.img-container img {
+  width: 100%;
+  /* height: auto; */
+}
+
+.img-container .btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* transform: translate(-50%, -50%); */
+  transform: translate(88%, 246%);
+  -ms-transform: translate(-50%, -50%);
+  background-color: #40647d;
+  color: white;
+  font-size: 18px;
+  padding: 12px 24px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  text-align: center;
+  opacity: 0.8;
+}
+
+.img-container .btn:hover {
+  background-color: #fff;
+  color: #40647d;
+}
+
+.category-link a{
+  text-decoration: none;
+  color: black;
+  line-height: normal;
+}
+
+/* Spinner */
+.lds-hourglass {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-hourglass:after {
+  content: " ";
+  display: block;
+  border-radius: 50%;
+  width: 0;
+  height: 0;
+  margin: 8px;
+  box-sizing: border-box;
+  border: 32px solid rgb(0, 0, 0);
+  border-color: rgb(27, 184, 147) transparent rgb(27, 184, 147) transparent;
+  animation: lds-hourglass 1.2s infinite;
+}
+@keyframes lds-hourglass {
+  0% {
+    transform: rotate(0);
+    animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  }
+  50% {
+    transform: rotate(900deg);
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  100% {
+    transform: rotate(1800deg);
+  }
+}
