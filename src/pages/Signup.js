@@ -1,77 +1,127 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom';
-import Layout from './../components/Layout/Layout';
-import {BsFillEyeFill} from 'react-icons/bs'
-import {AiOutlineArrowRight} from 'react-icons/ai'
-import { getAuth, createUserWithEmailAndPassword, updateProfile} from "firebase/auth";
-import { db } from '../firebase.config';
-import {doc, setDoc, serverTimestamp} from 'firebase/firestore'
-import { toast } from 'react-toastify';
-import OAuth from '../components/Layout/OAuth';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Layout from "./../components/Layout/Layout";
+import { toast } from "react-toastify";
+import { BsFillEyeFill } from "react-icons/bs";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
+import { db } from "../firebase.config";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import "../styles/signup.css";
+import OAuth from "../components/Layout/OAuth";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
-    name:"",
+    name: "",
     password: "",
-
   });
   const { name, email, password } = formData;
+  const navigate = useNavigate();
+
   const onChange = (e) => {
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
       [e.target.id]: e.target.value,
-    }))
-  }
-  const navigate = useNavigate();
-  const onSubmitHandler = async (e) =>{
+    }));
+  };
+
+  const onSubmitHndler = async (e) => {
     e.preventDefault();
     try {
       const auth = getAuth();
-      const userCredentials = await createUserWithEmailAndPassword(auth, email, password)
-      const user = userCredentials.user
-      updateProfile(auth.currentUser,{displayName:name})
-      const formDataCopy = {...formData}
-      delete formDataCopy.password
-      formDataCopy.timeStamp = serverTimestamp();
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      updateProfile(auth.currentUser, { displayName: name });
+      const formDataCopy = { ...formData };
+      delete formDataCopy.password;
+      formDataCopy.timestamp = serverTimestamp();
       await setDoc(doc(db, "users", user.uid), formDataCopy);
-      toast.success("Signup Successfully")
-      navigate('/')
+      toast.success("Signup Successfully !");
+      navigate("/");
     } catch (error) {
-      toast.error("Something Went Wrong")
+      console.log(error);
+      toast.error("Something Went Wrong");
     }
-  }
+  };
   return (
-    <Layout>
-      <div className="container align-items-center justify-content-center mt-5 w-50">
-        <h3 className='text-dark text-center'>Home <AiOutlineArrowRight/> Signup</h3>
-        <form className='bg-light p-3' onSubmit={onSubmitHandler}>
-          <div className="m-3">
-            <label htmlFor="name" className="form-label">Name</label>
-            <input type="text" className="form-control" id="name" value={name} onChange={onChange} name='name' aria-describedby="nameHelp" />
-          </div>
-          <div className="m-3">
-            <label htmlFor="email" className="form-label">Email address</label>
-            <input type="email" className="form-control" id="email" value={email} onChange={onChange} name='email' aria-describedby="emailHelp" />
-          </div>
-          <div className="m-3">
-            <label htmlFor="password" className="form-label">Password</label>
-            <input type={showPassword ? 'text':'password'} className="form-control mb-3" value={password} onChange={onChange} id="password" name='password' />
-            <span>Show Password <BsFillEyeFill onClick={()=>{setShowPassword((prevState)=>!prevState)}} style={{cursor:"pointer"}} /></span>
-          </div>
-
-          <button type="submit" className="m-3 btn btn-dark">Sign Up</button>
-          <div>
-            <h6 className='m-3'>Login With Google</h6>
-            <OAuth/>
-            <span className='m-3'>Already User <Link to="/signin">Login</Link></span>
-          </div>
-        </form>
-
+    <Layout title="signup - house marketplace">
+      <div className="row signup-container">
+        <div className="col-md-6 signup-container-col-1">
+          <img src="../assests/signup.svg" alt="welcome" />
+        </div>
+        <div className="col-md-6 signup-container-col-2">
+          <form onSubmit={onSubmitHndler}>
+            <h3 className=" mt-2 text-center ">Sign Up </h3>
+            <div className="mb-3">
+              <label htmlFor="exampleInputEmail1" className="form-label">
+                Your Name
+              </label>
+              <input
+                type="text"
+                value={name}
+                className="form-control"
+                id="name"
+                onChange={onChange}
+                aria-describedby="nameHelp"
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="exampleInputEmail1" className="form-label">
+                Email address
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={onChange}
+                className="form-control"
+                id="email"
+                aria-describedby="emailHelp"
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="exampleInputPassword1" className="form-label">
+                Password
+              </label>
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={onChange}
+                className="form-control"
+                id="password"
+              />
+            </div>
+            <div className="mb-3">
+              show password
+              <BsFillEyeFill
+                className="text-danger ms-2  "
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  setShowPassword((prevState) => !prevState);
+                }}
+              />
+            </div>
+            <button type="submit" className="btn signup-button">
+              Sign up
+            </button>
+            <span className="ms-4">Already User</span>{" "}
+            <Link to="/signin">Login</Link>
+            <div className="mt-3">
+              <OAuth />
+            </div>
+          </form>
+        </div>
       </div>
     </Layout>
-  )
-}
+  );
+};
 
-export default Signup
+export default Signup;

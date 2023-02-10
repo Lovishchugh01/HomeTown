@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom';
-import Layout from './../components/Layout/Layout';
-import {BsFillEyeFill} from 'react-icons/bs'
-import {AiOutlineArrowRight} from 'react-icons/ai'
+import React, { useState } from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { toast } from 'react-toastify';
-import OAuth from '../components/Layout/OAuth';
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { BsFillEyeFill } from "react-icons/bs";
+import Layout from "./../components/Layout/Layout";
+import "../styles/signin.css";
+import OAuth from "../components/Layout/OAuth";
 
 const Signin = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -14,54 +14,96 @@ const Signin = () => {
     password: "",
   });
   const { email, password } = formData;
+  const navigate = useNavigate();
+
   const onChange = (e) => {
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
       [e.target.id]: e.target.value,
-    }))
-  }
-  const navigate = useNavigate();
-  const loginHandler  = async (e) =>{
+    }));
+  };
+
+  //loginHandler
+  const loginHandler = async (e) => {
     e.preventDefault();
     try {
       const auth = getAuth();
-      const userCredentials = await signInWithEmailAndPassword(auth, email, password);
-      if(userCredentials.user){
-        toast.success('Login Success');
-        navigate('/')
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      if (userCredential.user) {
+        toast.success("Login Success");
+        navigate("/");
       }
     } catch (error) {
       console.log(error);
-      toast.error("Invalid Email or Password")
+      toast.error("Invalid Email Or Password");
     }
-  }
+  };
   return (
-    <Layout>
-      <div className="container align-items-center justify-content-center mt-5 w-50">
-        <h3 className='text-dark text-center'>Home <AiOutlineArrowRight/> Signin</h3>
-        <form className='bg-light p-3' onSubmit={loginHandler}>
-          <div className="m-3">
-            <label htmlFor="email" className="form-label">Email address</label>
-            <input type="email" className="form-control" id="email" value={email} onChange={onChange} name='email' aria-describedby="emailHelp" />
-          </div>
-          <div className="m-3">
-            <label htmlFor="password" className="form-label">Password</label>
-            <input type={showPassword ? 'text':'password'} className="form-control mb-3" value={password} onChange={onChange} id="password" name='password' />
-            <span>Show Password <BsFillEyeFill onClick={()=>{setShowPassword((prevState)=>!prevState)}} style={{cursor:"pointer"}} /></span>
-            <span className='m-3'><Link to="/forgot-password">Forgot Password</Link></span>
-
-          </div>
-
-          <button type="submit" className="m-3 btn btn-dark">Sign In</button>
-          <OAuth/>
-          <div>
-            <span className='m-3'>Not a User <Link to="/signup">Register Now!</Link></span>
-          </div>
-        </form>
-
+    <Layout title="signin - house marketplace">
+      <div className="row m-4 signin-container ">
+        <div className="col-md-6">
+          <img src="../assests/loginpage.svg" alt="login" />
+        </div>
+        <div className="col-md-6 signin-container-col2">
+          <form onSubmit={loginHandler}>
+            <h4 className=" text-center">Sign In</h4>
+            <div className="mb-3">
+              <label htmlFor="exampleInputEmail1" className="form-label">
+                Email address
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={onChange}
+                className="form-control"
+                id="email"
+                aria-describedby="emailHelp"
+              />
+            </div>
+            <div className="mb-2 ">
+              <label htmlFor="exampleInputPassword1" className="form-label">
+                Password
+              </label>
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={onChange}
+                className="form-control"
+                id="password"
+              />
+            </div>
+            <div className="mb-3 show-pass-forgot">
+              <span>
+                <BsFillEyeFill
+                  className="text-danger ms-2 "
+                  size={25}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setShowPassword((prevState) => !prevState);
+                  }}
+                />{" "}
+                show password
+              </span>{" "}
+              |
+              <Link to="/forgot-password" className="ms-4">
+                forgot Password
+              </Link>
+            </div>
+            <button type="submit" className="btn signinbutton">
+              Sign in
+            </button>
+            <span className="ms-4 new-user"> New User</span>{" "}
+            <Link to="/signup">Sign up !</Link>
+            <OAuth />
+          </form>
+        </div>
       </div>
     </Layout>
-  )
-}
+  );
+};
 
-export default Signin
+export default Signin;

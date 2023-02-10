@@ -100,7 +100,7 @@ const Listing = () => {
             <p>{listing.parking ? `Parking spot` : "no spot for parking"}</p>
             <p>{listing.furnished ? `furnished house` : "not furnished"}</p>
             <Link
-              className="btn btn-success"
+              className="btn" style={{background:"#10524c", color:"white"}}
               to={`/contact/${listing.userRef}?listingName=${listing.name}`}
             >
               Contact Landlord

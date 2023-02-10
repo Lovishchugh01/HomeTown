@@ -479,9 +479,10 @@ const CreateListing = () => {
           <div className="mb-3">
             <input
               disabled={!name || !address || !regularPrice || !images}
-              className="btn btn-primary w-100"
+              className="btn w-100"
               type="submit"
               value="Create Listing"
+              style={{background:"#10524c", color:"white"}}
             />
           </div>
         </form>

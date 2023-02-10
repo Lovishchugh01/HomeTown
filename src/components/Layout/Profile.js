@@ -1,30 +1,32 @@
 import React, { useState, useEffect } from "react";
-import Layout from "./Layout";
-import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useNavigate, Link } from "react-router-dom";
 import { getAuth, updateProfile } from "firebase/auth";
-import { db } from "../../firebase.config";
 import { FaEdit, FaArrowAltCircleRight } from "react-icons/fa";
-import { IoCheckmarkDoneCircle } from "react-icons/io5";
+import { MdDoneOutline } from "react-icons/md";
 import {
   doc,
   updateDoc,
   collection,
+  getDocs,
   query,
   where,
   orderBy,
   deleteDoc,
-  getDocs,
 } from "firebase/firestore";
-import ListingItem from "./ListingItem";
+import "../../styles/profile.css";
+import Layout from './Layout';
+import { db } from './../../firebase.config';
+import ListingItem from './ListingItem';
 
 const Profile = () => {
   const auth = getAuth();
   const navigate = useNavigate();
+  // eslint-disable-next-line
   const [loading, setLoading] = useState(true);
   const [listings, setListings] = useState(null);
 
-  // useeffect for getting data
+  //useeffect for getting data
   useEffect(() => {
     const fetchUserListings = async () => {
       const listingRef = collection(db, "listings");
@@ -34,6 +36,7 @@ const Profile = () => {
         orderBy("timestamp", "desc")
       );
       const querySnap = await getDocs(q);
+      console.log(querySnap);
       let listings = [];
       querySnap.forEach((doc) => {
         return listings.push({
@@ -41,33 +44,33 @@ const Profile = () => {
           data: doc.data(),
         });
       });
+      console.log(listings);
       setListings(listings);
       setLoading(false);
-      // console.log(listings);
     };
     fetchUserListings();
   }, [auth.currentUser.uid]);
-  const [changeDetails, setChangeDetials] = useState(false);
+  const [changeDetails, setChangeDetails] = useState(false);
   const [formData, setFormData] = useState({
     name: auth.currentUser.displayName,
     email: auth.currentUser.email,
   });
   const { name, email } = formData;
-  const handleLogout = () => {
+
+  const logoutHandler = () => {
     auth.signOut();
     toast.success("Successfully Logout");
     navigate("/signin");
   };
 
-  // onchange handler
+  //onChange
   const onChange = (e) => {
     setFormData((prevState) => ({
       ...prevState,
       [e.target.id]: e.target.value,
     }));
   };
-
-  // submit handler
+  //submit handler
   const onSubmit = async () => {
     try {
       if (auth.currentUser.displayName !== name) {
@@ -76,7 +79,7 @@ const Profile = () => {
         });
         const userRef = doc(db, "users", auth.currentUser.uid);
         await updateDoc(userRef, { name });
-        toast.success("User Updated");
+        toast.success("User Updated!");
       }
     } catch (error) {
       console.log(error);
@@ -84,52 +87,59 @@ const Profile = () => {
     }
   };
 
-  // Delete Handler
-  const onDelete = async(listingId) => {
-    if(window.confirm('Are you sure want to delete ?')){
-        await deleteDoc(doc(db, 'listings', listingId))
-        const updatedListings = listings.filter(listing => listing.id !== listingId)
-        setListings(updatedListings)
-        toast.success('Listing Deleted Successfully')
+  //delete handler
+  const onDelete = async (listingId) => {
+    if (window.confirm("Are You Sure  want to delete ?")) {
+      // await deleteDoc(doc, (db, "listings", listingId));
+      await deleteDoc(doc(db, "listings", listingId));
+      const updatedListings = listings.filter(
+        (listing) => listing.id !== listingId
+      );
+      setListings(updatedListings);
+      toast.success("Listing Deleted Successfully");
     }
-  }
+  };
 
-  // Edit handler
-  const onEdit= (listingId) => {
-    navigate(`/editlisting/${listingId}`)
-  } 
+  //edit handler
+  const onEdit = (listingId) => {
+    navigate(`/editlisting/${listingId}`);
+  };
   return (
     <Layout>
-      <div className="container">
-        <div className="my-2 d-flex justify-content-between">
-          <h4>Profile Detials</h4>
-          <button className="btn btn-info" onClick={handleLogout}>
-            Logout
-          </button>
+      <div className="row profile-container">
+        <div className="col-md-6 profile-container-col1">
+          <img src="../assests/profile.svg" alt="profile" />
         </div>
-        <div className="container w-50 card">
-          <div className="mt-2 d-flex justify-content-between">
-            <p>User Personal details</p>
-            <span
-              style={{ cursor: "pointer" }}
-              onClick={() => {
-                changeDetails && onSubmit();
-                setChangeDetials((prevState) => !prevState);
-              }}
-            >
-              {changeDetails ? (
-                <IoCheckmarkDoneCircle color="green" />
-              ) : (
-                <FaEdit color="red" />
-              )}
-              {changeDetails ? "Save" : "Edit"}
-            </span>
+        <div className="col-md-6 profile-container-col2">
+          <div className="container mt-4  d-flex justify-content-between">
+            <h2>Profile Details</h2>
+            <button className="btn" style={{background:"#10524c", color:"white"}} onClick={logoutHandler}>
+              Logout
+            </button>
           </div>
-          <div className="card-body">
-            <form>
-              <div>
+          <div className="   mt-4 card">
+            <div className="card-header">
+              <div className="d-flex justify-content-between ">
+                <p>Your Personal Details </p>
+                <span
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    changeDetails && onSubmit();
+                    setChangeDetails((prevState) => !prevState);
+                  }}
+                >
+                  {changeDetails ? (
+                    <MdDoneOutline color="green" />
+                  ) : (
+                    <FaEdit color="black" />
+                  )}
+                </span>
+              </div>
+            </div>
+            <div className="card-body">
+              <form>
                 <div className="mb-3">
-                  <label htmlFor="name" className="form-label">
+                  <label htmlFor="exampleInputPassword1" className="form-label">
                     Name
                   </label>
                   <input
@@ -139,32 +149,35 @@ const Profile = () => {
                     value={name}
                     onChange={onChange}
                     disabled={!changeDetails}
-                    aria-describedby="emailHelp"
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="email" className="form-label">
+                  <label htmlFor="exampleInputEmail1" className="form-label">
                     Email address
                   </label>
                   <input
                     type="email"
+                    value={email}
                     className="form-control"
                     id="email"
-                    value={email}
+                    aria-describedby="emailHelp"
                     onChange={onChange}
                     disabled={!changeDetails}
-                    aria-describedby="emailHelp"
                   />
                 </div>
-              </div>
-            </form>
+              </form>
+            </div>
+          </div>
+          <div className="mt-3 create-listing">
+            <Link to="/create-listing" style={{ color:"#10524c"}}>
+              <FaArrowAltCircleRight color="primary" /> &nbsp; Sell or Rent Your
+              Home
+            </Link>
           </div>
         </div>
-        <Link to="/create-listing">
-          <FaArrowAltCircleRight /> Sell or Rent Your Home
-        </Link>
       </div>
-      <div className="container">
+
+      <div className="container-fluid mt-4 your-listings">
         {listings && listings?.length > 0 && (
           <>
             <h4 className="text-center">Your Listings</h4>

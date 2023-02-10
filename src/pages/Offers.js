@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { db } from './../firebase.config';
 import { toast } from 'react-toastify';
+import { IoReloadCircle } from "react-icons/io5";
 import Layout from '../components/Layout/Layout';
 import { collection, getDocs, query, where, orderBy, limit, startAfter} from 'firebase/firestore';
 import Spinner from './../components/Layout/Spinner';
 import ListingItem from './../components/Layout/ListingItem';
-
+import "../styles/offers.css"
 const Offers = () => {
   const [listing, setListing] = useState("");
   const [lastFetchListing, setLastFetchListing] = useState(null);
@@ -68,8 +69,11 @@ const Offers = () => {
     };
   return (
     <Layout>
-        <div className="container mt-5">
-            <h1 className='text-center'>Best Offers</h1>
+        <div className="container mt-5 offers">
+            <h1 className='text-center'>
+                
+                Best Offers
+            </h1>
             {loading ? (
                 <Spinner />
                 ) : listing && listing.length > 0 ? (
@@ -86,12 +90,9 @@ const Offers = () => {
         </div>
         <div className="d-flex align-items-center justify-content-center mb-4 mt-4">
         {lastFetchListing && (
-          <button
-            className="btn btn-dark text-center"
-            onClick={fetchLoadMoreListing}
-          >
-            Load More
-          </button>
+          <button className="load-btn" onClick={fetchLoadMoreListing}>
+          <IoReloadCircle /> load more
+        </button>
         )}
       </div>
     </Layout>
