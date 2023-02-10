@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/HomeTown/static/css/main.ab5814ef.css",
-    "main.js": "/HomeTown/static/js/main.7e082493.js",
-    "static/js/787.ec35f74f.chunk.js": "/HomeTown/static/js/787.ec35f74f.chunk.js",
-    "static/media/back.jpg": "/HomeTown/static/media/back.bf47c3b18db67d5c5c39.jpg",
-    "index.html": "/HomeTown/index.html",
-    "main.ab5814ef.css.map": "/HomeTown/static/css/main.ab5814ef.css.map",
-    "main.7e082493.js.map": "/HomeTown/static/js/main.7e082493.js.map",
-    "787.ec35f74f.chunk.js.map": "/HomeTown/static/js/787.ec35f74f.chunk.js.map"
+    "main.css": "/Lovishchugh01/HomeTown/static/css/main.cac80001.css",
+    "main.js": "/Lovishchugh01/HomeTown/static/js/main.5ca534a7.js",
+    "static/js/787.ec35f74f.chunk.js": "/Lovishchugh01/HomeTown/static/js/787.ec35f74f.chunk.js",
+    "static/media/back.jpg": "/Lovishchugh01/HomeTown/static/media/back.bf47c3b18db67d5c5c39.jpg",
+    "index.html": "/Lovishchugh01/HomeTown/index.html",
+    "main.cac80001.css.map": "/Lovishchugh01/HomeTown/static/css/main.cac80001.css.map",
+    "main.5ca534a7.js.map": "/Lovishchugh01/HomeTown/static/js/main.5ca534a7.js.map",
+    "787.ec35f74f.chunk.js.map": "/Lovishchugh01/HomeTown/static/js/787.ec35f74f.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.ab5814ef.css",
-    "static/js/main.7e082493.js"
+    "static/css/main.cac80001.css",
+    "static/js/main.5ca534a7.js"
   ]
 }
